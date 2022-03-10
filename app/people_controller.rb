@@ -14,6 +14,7 @@ class PeopleController
       parser.parse(peoples_information)
       results += parser.parsed_data
     end
+    results = results.sort_by { |data| data[permitted_params[:order].to_s] }
     Normalizer::PeopleNormalizer.new(results, ['first_name', 'city', 'birthdate']).normalize_data
   end
 
