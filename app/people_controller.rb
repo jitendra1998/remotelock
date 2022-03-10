@@ -1,5 +1,5 @@
 require_relative 'parser_factory'
-require_relative 'normalizer/people_normalizer'
+require_relative 'normalizer_factory'
 
 class PeopleController
   def initialize(params)
@@ -7,15 +7,17 @@ class PeopleController
   end
 
   def normalize
-    results = []
-    @params.each do |format, peoples_information|
+    parsed_data = []
+    permitted_params.each do |format, peoples_information|
       next unless format.to_s.include?('format')
       parser = ParserFactory.new(format).build
       parser.parse(peoples_information)
-      results += parser.parsed_data
+      parsed_data += parser.parsed_data
     end
-    results = results.sort_by { |data| data[permitted_params[:order].to_s] }
-    Normalizer::PeopleNormalizer.new(results, ['first_name', 'city', 'birthdate']).normalize_data
+    # Todo: Integrate this sorting logic inside Normalizer class, once it's clear what are it's all possible use cases
+    parsed_data = parsed_data.sort_by { |data| data[permitted_params[:order].to_s] }
+    normalizer = NormalizerFactory.new(:people).build
+    normalizer.normalize_data(parsed_data, ['first_name', 'city', 'birthdate'])
   end
 
   private

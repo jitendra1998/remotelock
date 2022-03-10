@@ -2,16 +2,11 @@ require 'date'
 
 class Normalizer
   class PeopleNormalizer
-    def initialize(data, fields)
-      @data = data
-      @fields = fields
-    end
-
-    def normalize_data
+    def normalize_data(data, fields)
       normalized_result = []
-      @data.each do |data_hash|
+      data.each do |data_hash|
         data_list = []
-        @fields.each do |field|
+        fields.each do |field|
           if field == 'birthdate'
             data_hash[field] = Date.parse(data_hash[field]).strftime("%-m/%-d/%Y")
           end

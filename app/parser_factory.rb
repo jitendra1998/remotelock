@@ -12,7 +12,14 @@ class ParserFactory
     elsif @data_format == :percent_format
       Parser::PercentFormatParser.new
     else
-      # raise InvalidDataFormat.new(@data_format)
+      raise InvalidDataFormat.new(@data_format)
+    end
+  end
+
+  # Todo: Move this to a separate error file for this project
+  class InvalidDataFormat < StandardError
+    def initialize(message)
+      super(message)
     end
   end
 end
